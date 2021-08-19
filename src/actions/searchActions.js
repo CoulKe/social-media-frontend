@@ -1,22 +1,24 @@
 import axios from "axios";
-import { SEARCH } from "../ActionTypes/searchTypes";
+import * as searchTypes from "../ActionTypes/searchTypes";
 
 /**
- *
- * @param {string} value
- * @returns
+ * Searches data in the database.
+ * @param {string} value - Text to be searched.
+ * @param {*} searchFilter - Filter what to search (users | posts) `optional`;
  */
-export const search = (value) => async (dispatch) => {
+export const search = (value, searchFilter="") => async (dispatch) => {
+  dispatch({type: searchTypes.SEARCH_REQUEST});
   const { data } = await axios({
     method: "GET",
     url: "/search",
     params: {
       value,
+      searchFilter
     },
   });
-  console.log(data);
+
   dispatch({
-    type: SEARCH,
+    type: searchTypes.SEARCH_SUCCESSFULL,
     payload: {
       data,
     },

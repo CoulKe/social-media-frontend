@@ -1,17 +1,18 @@
 import { lazy } from "react";
-// import AuthLayout from "../layouts/AuthLayout";
-import MainLayout from "../layouts/MainLayout";
-import Home from "../pages/Home/";
 
-// Dynamic layout
+// Layouts
+const MainLayout = lazy(() => import("../layouts/MainLayout"));
 const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
+const EmptyLayout = lazy(() => import("../layouts/EmptyLayout"));
 
-// Dynamic page loads
+// Pages
+const Home = lazy(() => import("../pages/Home/"));
 const Hashtags = lazy(() => import("../pages/Hashtags"));
 const FollowingsPage = lazy(() => import("../pages/Follows/followings"));
 const FollowersPage = lazy(() => import("../pages/Follows/followers"));
 const Register = lazy(() => import("../pages/Register"));
 const Login = lazy(() => import("../pages/Login"));
+const Logout = lazy(() => import("../pages/Logout"));
 const Comments = lazy(() => import("../pages/Comments"));
 const Search = lazy(() => import("../pages/Search"));
 
@@ -35,6 +36,11 @@ const PublicPages = [
     path: "/followers",
     page: FollowersPage,
     layout: MainLayout,
+  },
+  {
+    path: "/logout",
+    page: Logout,
+    layout: EmptyLayout,
   },
   {
     path: "/login",

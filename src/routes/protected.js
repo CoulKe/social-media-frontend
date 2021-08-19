@@ -1,16 +1,32 @@
-import MainLayout from "../layouts/MainLayout";
-import Chats from "../pages/Messages";
-import Profile from "../pages/Profile";
-import EditProfile from "../pages/Profile/edit";
-import PostEdit from "../pages/EditPost";
-import CommentEdit from "../pages/CommentEdit";
-import ComposeMessage from "../pages/Messages/compose";
-import Notifications from "../pages/Notifications";
+import { lazy } from "react";
+
+// Layouts
+const MainLayout = lazy(() => import("../layouts/MainLayout"));
+const EmptyLayout = lazy(() => import("../layouts/EmptyLayout"));
+
+// Pages
+const Chats = lazy(() => import("../pages/Messages"));
+const Profile = lazy(() => import("../pages/Profile"));
+const EditProfile = lazy(() => import("../pages/Profile/edit"));
+const PostEdit = lazy(() => import("../pages/EditPost"));
+const CommentEdit = lazy(() => import("../pages/CommentEdit"));
+const ComposeMessage = lazy(() => import("../pages/Messages/compose"));
+const Notifications = lazy(() => import("../pages/Notifications"));
 
 const AuthPages = [
-    {
+  {
     path: "/messages",
     page: Chats,
+    layout: MainLayout,
+  },
+  {
+    path: "/messages/:recipient",
+    page: ComposeMessage,
+    layout: EmptyLayout,
+  },
+  {
+    path: "/notifications",
+    page: Notifications,
     layout: MainLayout,
   },
   {
@@ -31,16 +47,6 @@ const AuthPages = [
   {
     path: "/edit-comment",
     page: CommentEdit,
-    layout: MainLayout,
-  },
-  {
-    path: "/messages/:recipient",
-    page: ComposeMessage,
-    layout: MainLayout,
-  },
-  {
-    path: "/notifications",
-    page: Notifications,
     layout: MainLayout,
   },
 ];

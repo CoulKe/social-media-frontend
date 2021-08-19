@@ -5,9 +5,9 @@ import * as hashtagActions from "../ActionTypes/hashtagTypes";
  * Fetches posts with the specified hashtag.
  * @param {string} hashtag - Route param
  * @param {string} lastId - Last fetched post id
- * @returns
  */
-export const fetchHashtags = (hashtag = "") =>
+export const fetchHashtags =
+  (hashtag = "") =>
   async (dispatch) => {
     try {
       dispatch({ type: hashtagActions.FETCH_HASHTAGS_REQUEST });
@@ -34,7 +34,14 @@ export const fetchHashtags = (hashtag = "") =>
       console.log(error);
     }
   };
-export const fetchMoreHashtags = (hashtag = "", lastId = "") =>
+
+/**
+ * Fetches more posts with the specified hashtag.
+ * @param {string} hashtag - Hashtag to search.
+ * @param {string} lastId - Last id of the fetched hashtag.
+ */
+export const fetchMoreHashtags =
+  (hashtag = "", lastId = "") =>
   async (dispatch) => {
     try {
       dispatch({ type: hashtagActions.FETCH_HASHTAGS_REQUEST });

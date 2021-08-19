@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -8,57 +8,84 @@ import Wrapper, { MessagesView, MessageBox, SingleMessage } from "./style";
 
 //Icons
 import SendIcon from "../../icons/send.svg";
-import { fetchMessages, sendMessage } from "../../actions/messageActions";
+import { fetchMessages, getNewMessages, sendMessage } from "../../actions/messageActions";
 import Meta from "../../Components/Meta";
+import { Linkify } from "../../utils";
+import { Link, useHistory } from "react-router-dom";
+import LoadingBlock from "../../Components/LoadingBlock";
+import axios from "axios";
 // import Read from "../../assets/images/read.png";
 // import Unread from "../../assets/images/unread.png";
 
 dayjs.extend(relativeTime);
 
-export default function Compose({ match }) {
+export default function Compose({ match, location }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [newMessage, setNewMessage] = useState("");
-
+  const composeForm = useRef(null);
+  const messagesBlock = useRef(null);
+  
   const pathname = match.url.split("/");
   const recipient = pathname[pathname.length - 1];
-  const messages = useSelector(state => state.messages)
+  const {messages, userToMessage,loading} = useSelector(state => state.messages)
   let authenticatedUser=localStorage.getItem("loggedUser");
+  let lastId = messages[messages?.length - 1]?._id || "";
 
   useEffect(() => {
     scrollToBottom();
     dispatch(fetchMessages(authenticatedUser));
 
   }, [authenticatedUser, dispatch]);
+
+  useEffect(() => {
+    const newMessageHandler = setInterval(() => {
+      dispatch(getNewMessages(recipient, lastId));
+    }, 1000);
+
+    return () => {
+      clearInterval(newMessageHandler);
+    }
+  }, [authenticatedUser, dispatch, lastId, messages, recipient]);
+
   /**Scrolls messages view area to bottom */
   function scrollToBottom() {
-    let messagesView = document.querySelector("#messages-view");
     //scroll to bottom
-    // messagesView.scrollTo(0, messagesView.scrollHeight);
-    messagesView.lastChild.scrollIntoView();
+    messagesBlock.current.lastChild?.scrollIntoView();
   }
   
   function handleSendMessage(e) {
     e.preventDefault();
-    let form = document.querySelector("form");
 
     if (newMessage !== "") {
       dispatch(sendMessage(newMessage, authenticatedUser, recipient))
-      form.reset()
+      composeForm.current.reset();
+      scrollToBottom();
     }
   }
   return (
     <Wrapper>
     <Meta title="Message" />
-      <MessagesView id="messages-view">
-      <p>{recipient}</p>
+      <MessagesView ref={messagesBlock} id="testThis">
+      <div className="recipient-name bg-light">
+      <div><button onClick={()=>{
+        // Check if it was open from the same page
+        location?.state?.from ? history.goBack() : history.push("/messages");
+      }}>Back</button>
+         <Link to={`/profile?username=${recipient}`}>
+           {userToMessage && !loading ? `${userToMessage.first_name}  ${userToMessage.last_name}` : `@${recipient}`}
+         </Link>
+        </div>
+      </div>
+      {loading ? <LoadingBlock text="Getting messages..."/> : ""}
         {messages.map((message, index) => (
           <div className="single-message-wrapper" key={index} style={message.sender === recipient ? {textAlign: 'left'} : {textAlign: 'right'}}>
           <SingleMessage style={message.sender === recipient ? {backgroundColor: colors.grey} : {backgroundColor: colors.lightMaroon}}>
-          <p>{message.message}</p>
+          <Linkify key={index} text={message.message} linkStyles={{color: colors.midYellow}}/>
           {/* {message.sender !== recipient && (
             <img src={Read} className="d-inline" alt="read"/>
           )} */}
-          <span>{dayjs(message.date_created).format('h:m a')}</span>
+          <span>{dayjs(message.date_created).format('MMM D, h:m a')}</span>
           </SingleMessage>
           </div>
         ))}
@@ -67,9 +94,10 @@ export default function Compose({ match }) {
       </MessagesView>
       <Form
         action=""
-        method="get"
+        method="POST"
+        ref={composeForm}
         onSubmit={handleSendMessage}
-        className="mx-auto mb-5 fixed-bottom"
+        className="mx-auto fixed-bottom"
       >
         <MessageBox>
           <Form.Label className="sr-only">Enter message</Form.Label>

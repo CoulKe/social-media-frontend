@@ -12,8 +12,9 @@ import SinglePost from "../../Components/Posts/SinglePost";
 export default function Search() {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
-  const { users, posts } = useSelector((state) => state.search);
-  console.log({ users, posts });
+  const { users, posts, loading, finished } = useSelector(
+    (state) => state.search
+  );
 
   return (
     <Wrapper>
@@ -34,36 +35,57 @@ export default function Search() {
             onChange={(e) => setSearchValue(e.target.value)}
           ></Form.Control>
           <button type="submit" className="pink-button text-white w-25">
-            Search
+            Search all
           </button>
         </div>
       </Form>
       {/* Search options */}
       <div className="search-options">
-        <button role="search" style={{ borderRight: "2px solid #000" }}>
-          People
+        <button
+          onClick={(e) => {
+            dispatch(search(searchValue, "users"));
+          }}
+          role="search"
+          style={{ borderRight: "2px solid #000" }}
+        >
+          Users
         </button>
-        <button role="search">Posts</button>
+        <button
+          onClick={(e) => {
+            dispatch(search(searchValue, "posts"));
+          }}
+          role="search"
+        >
+          Posts
+        </button>
       </div>
-      {users && (
+      {users?.length > 0 && (
         <section>
-        <h1>Users</h1>
-          {users.map((user, index) => (
-            <Link key={index} to={`/profile?username=${user.username}`}>
-              <p>
-                {user.first_name} {user.last_name}
+          <h1>Users</h1>
+          <div className="users-result">
+            {users.map((user, index) => (
+              <p key={index}>
+                <Link to={`/profile?username=${user.username}`}>
+                  {user.first_name} {user.last_name}
+                </Link>
               </p>
-            </Link>
-          ))}
+            ))}
+          </div>
         </section>
       )}
-      {posts && (
+      {posts?.length > 0 && (
         <section>
-        <h1>Posts</h1>
+          <h1>Posts</h1>
           {posts.map((post, index) => (
             <SinglePost key={index} post={post} />
           ))}
         </section>
+      )}
+
+      {!loading && !users.length && !posts.length && (
+        <div>
+          <h1>No data found</h1>
+        </div>
       )}
     </Wrapper>
   );

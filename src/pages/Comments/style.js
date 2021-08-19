@@ -1,6 +1,26 @@
 import styled from "styled-components";
 
 export const CommentsBlock = styled.div`
+  position: relative;
+  margin-bottom: 120px;
+  &::before {
+    content: " ";
+    display: block;
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    background: aquamarine;
+    left: 16px;
+    border-left: 2px solid black;
+    border-radius: 22px;
+  }
+  /* &::after {
+    content: " ";
+    width: 100%;
+    height: 70px;
+    display: block;
+  } */
+
   .comment-box {
     position: fixed;
     margin-bottom: 50px;

@@ -1,4 +1,4 @@
-import loggedReducer from "./isLogged";
+import loginReducer from "./login";
 import postsReducer from "./posts";
 import profileReducers from "./profile";
 import chatsReducer from "./chat";
@@ -13,7 +13,7 @@ import searchReducer from "./search";
 import { combineReducers } from "redux";
 
 const allReducers = combineReducers({
-  isLogged: loggedReducer,
+  login: loginReducer,
   posts: postsReducer,
   followers: followersReducer,
   followings: followingsReducer,

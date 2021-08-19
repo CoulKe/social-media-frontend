@@ -28,7 +28,7 @@ export default function PostEdit({location}) {
     }
 
   return (
-    <main>
+    <section>
     <Meta title="Edit post" />
       <Form onSubmit={handleEdit}>
         <Form.Group>
@@ -48,6 +48,6 @@ export default function PostEdit({location}) {
           </Button>
         </Form.Group>
       </Form>
-    </main>
+    </section>
   );
 }

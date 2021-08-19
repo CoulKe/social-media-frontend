@@ -1,4 +1,4 @@
-import React, { useEffect, useState,Suspense, lazy } from "react";
+import React, { useEffect, useState, Suspense, lazy, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,19 +12,29 @@ import { toggleFollow } from "../../actions/followsActions";
 import { fetchProfileData, updateBio } from "../../actions/profileActions";
 import Meta from "../../Components/Meta";
 import ProfilePic from "../../coul.png";
+import Skeleton from "react-loading-skeleton";
+import SinglePost from "../../Components/Posts/SinglePost";
 
 const Profile = ({ location }) => {
   const [showBioForm, setShowBioForm] = useState(false);
   const [bioValues, setBioValues] = useState("");
   const [showPostBox, setShowPostBox] = useState(false);
+  const [pinnedPost, setPinnedPost] = useState(null);
   const dispatch = useDispatch();
-  const { userInfo, posts, isFollowing } = useSelector(
+  const { userInfo, posts, isFollowing, loading } = useSelector(
     (state) => state.profile
   );
-
+  
   let authId = localStorage.getItem("id");
   let authUsername = localStorage.getItem("loggedUser");
   let pageUser;
+  
+  useEffect(()=>{
+    if(posts.length){
+      let pin = posts.find(post => post.isPinned === true)
+      setPinnedPost(()=> pin)
+    }
+  },[pinnedPost, posts])
 
   if (location.search) {
     pageUser = queryString.parse(location.search)?.username;
@@ -65,9 +75,9 @@ const Profile = ({ location }) => {
       {!pageUser && (
         <>
           <Meta title="Error" />
-          <main>
+          <section>
             <h1>That user doesn't exists</h1>
-          </main>
+          </section>
         </>
       )}
       {userInfo && (
@@ -77,18 +87,43 @@ const Profile = ({ location }) => {
           ) : (
             ""
           )}
+          {loading ? (
+            <>
+            <div style={{display: "flex",alignItems: "center",justifyContent: "center"}}>
+            <Skeleton
+              circle={true}
+              width={200}
+              height={200}
+            />
+          </div>
+            {/* Bio */}
+            <Skeleton height={100}/>
+            {/* Edit buttons */}
+            <Skeleton count={2} width={100} style={{display: 'block', margin:'6px auto'}}/>
+            {/* Followers & personal info */}
+            <Skeleton count={3} width={150} style={{display: 'block', margin:'6px 0px'}}/>
+            {/* Post button*/}
+            <Skeleton height={50} />
+            {/* Pinned post*/}
+            <Skeleton height={100}/>
+            </>
+            ) : ""}
+
           {/* Load image if user is admin else create stylized text. */}
           {userInfo && userInfo.username === "admin" && (
-            <img src={ProfilePic} alt={`${userInfo.first_name} ${userInfo.last_name}`} />
+            <img
+              src={ProfilePic}
+              alt={`${userInfo.first_name} ${userInfo.last_name}`}
+            />
           )}
           {userInfo.username && userInfo.username !== "admin" && (
             <div
-              className={"image-text"}
+              className={"image-text big-image-text"}
             >{`${userInfo.first_name[0]}${userInfo.last_name[0]}`}</div>
           )}
 
-          <h1>{`${userInfo.first_name} ${userInfo.last_name}`}</h1>
-          <section id="bio">
+          {!loading ? <h1>{`${userInfo.first_name} ${userInfo.last_name}`}</h1> : ""}
+          {!loading ? <section id="bio">
             {userInfo.bio && <pre>{userInfo.bio}</pre>}
             {showBioForm && (
               <Form method="POST" id="bio-form" onSubmit={handleBioUpdate}>
@@ -108,8 +143,8 @@ const Profile = ({ location }) => {
                 </Form.Group>
               </Form>
             )}
-          </section>
-          {authUsername === pageUser && (
+          </section> : ""}
+          {!loading && authUsername === pageUser && (
             <div className="text-center font-weight-bold">
               <button
                 className="d-block mx-auto edit-button"
@@ -129,7 +164,7 @@ const Profile = ({ location }) => {
               </Link>
             </div>
           )}
-          {location.search && authUsername !== pageUser && (
+          {!loading && location.search && authUsername !== pageUser && (
             <ProfileCta>
               <Link
                 className="pink-button"
@@ -142,7 +177,7 @@ const Profile = ({ location }) => {
               </button>
             </ProfileCta>
           )}
-          <FollowsWrapper className="p-2">
+          {!loading ? <FollowsWrapper className="p-2">
             <Link to={`/followers?username=${pageUser}`}>
               <b>
                 {userInfo.followersCount > 1099
@@ -163,13 +198,13 @@ const Profile = ({ location }) => {
               </b>{" "}
               Following
             </Link>
-          </FollowsWrapper>
-          <div id="details" className="border-bottom">
+          </FollowsWrapper> : ""}
+          {loading ? <div id="details" className="border-bottom">
             {userInfo.residence && <p>From {userInfo.residence}</p>}
             {userInfo.school && <p>Studied at {userInfo.school}</p>}
-          </div>
-          {showPostBox ? <PostBox /> : ""}
-          {!showPostBox &&
+          </div> : ""}
+          {!loading && showPostBox ? <PostBox /> : ""}
+          {!loading && !showPostBox &&
           (queryString.parse(location.search)?.username === authUsername ||
             !queryString.parse(location.search)?.username) ? (
             <div
@@ -181,20 +216,16 @@ const Profile = ({ location }) => {
           ) : (
             ""
           )}
-          <div id="pinned">
+          {pinnedPost ? <div id="pinned">
             <h1>Pinned post</h1>
-            <pre>
-              "Believe in yourself even if your chances are one in a million"
-              -Jim Carrey
-            </pre>
-          </div>
+            <SinglePost post={pinnedPost}/>
+          </div> : ""}
         </>
       )}
-      <div id="posts">
-        
+      {!loading ? <div id="posts">
         {posts.length ? <PostComponent posts={posts} /> : "loading"}
         {posts.length && <LoadMoreButton cb={loadMore} />}
-      </div>
+      </div> : ""}
     </Wrapper>
   );
 };

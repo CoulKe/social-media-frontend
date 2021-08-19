@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import { RegisterWrapper, StepsWrapper } from "./style";
@@ -7,14 +7,10 @@ import { Form, Button } from "react-bootstrap";
 import Meta from "../../Components/Meta";
 
 const Register = () => {
-  const isLogged = useSelector((state) => state.isLogged);
+  const {isLogged} = useSelector((state) => state.login);
   const [formValues, setFormValues] = useState({});
   const [registrationStep, setRegistrationStep] = useState(1);
-  const history = useHistory();
-  if (isLogged) {
-    history.goBack();
-  }
-
+  const [nextStepClicked, setNextStepClicked] = useState(false);
   const [errors, setErrors] = useState({
     fNameErr: "",
     lNameErr: "",
@@ -25,7 +21,22 @@ const Register = () => {
     messageErr: "",
   });
 
+  const history = useHistory();
+
+  useEffect(()=>{
+
+    if(registrationStep === 2 && !nextStepClicked && errors?.fNameErr?.length && errors?.lNameErr?.length && errors?.uNameErr?.length){
+      setRegistrationStep(1);
+    }
+
+  },[errors, nextStepClicked, registrationStep]);
+
+  if (isLogged) {
+    history.goBack();
+  }
+
   const handleRegistration = () => {
+    setNextStepClicked(false);
     const form = document.querySelector("#registration-form");
     axios({
       method: "POST",
@@ -82,9 +93,6 @@ const Register = () => {
             }
           });
         }
-        // if (!navigator.onLine) {
-        //   setErrors("You appear to be offline");
-        // }
       });
   };
   const handleChange = (e) => {
@@ -115,7 +123,10 @@ const Register = () => {
             <span className="step" onClick={() => setRegistrationStep(1)}>
               &nbsp;
             </span>
-            <span className="step" onClick={() => setRegistrationStep(2)}>
+            <span className="step" onClick={() => {
+              setNextStepClicked(true);
+              setRegistrationStep(2);
+              }}>
               &nbsp;
             </span>
           </StepsWrapper>
@@ -223,6 +234,7 @@ const Register = () => {
           <Button
             className={`pink-button`}
             onClick={() => {
+              setNextStepClicked(true);
               setRegistrationStep(2);
             }}
           >

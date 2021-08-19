@@ -4,16 +4,17 @@ const reactStringReplace = require("react-string-replace");
 /**
  * Formats text to replace urls and hashtags to links.
  * @param {*} prop.text - Text to format.
+ * @param {object} prop.linkStyle - styles to apply to links.
  * @returns formattted text.
  */
-export const Linkify = function ({ text }) {
+export const Linkify = function ({ text, linkStyles={} }) {
   // let formattedText = parse(text); /(https?:\/\/\S+)/g
   // Match URLs
   let replacedText = reactStringReplace(
     text,
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.?[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/,
     (match, i) => (
-      <a key={match + i} href={match}>
+      <a key={match + i} style={linkStyles} href={match}>
         {match}
       </a>
     )
@@ -25,7 +26,7 @@ export const Linkify = function ({ text }) {
     replacedText,
     /([^\s@]+@[^\s@]+)/g,
     (match, i) => (
-      <a key={match + i} href={`mailto:${match}`}>
+      <a key={match + i} style={linkStyles} href={`mailto:${match}`}>
         {match}
       </a>
     )
@@ -33,14 +34,14 @@ export const Linkify = function ({ text }) {
 
   // Match @-mentions
   replacedText = reactStringReplace(replacedText, /@(\w+)/g, (match, i) => (
-    <a key={match + i} href={`https://twitter.com/${match}`}>
+    <a key={match + i} style={linkStyles} href={`https://twitter.com/${match}`}>
       @{match}
     </a>
   ));
 
   // Match hashtags
   replacedText = reactStringReplace(replacedText, /#(\w+)/g, (match, i) => (
-    <Link key={match + i} to={`/hashtags/${match}`}>
+    <Link key={match + i} style={linkStyles} to={`/hashtags/${match}`}>
       #{match}
     </Link>
   ));

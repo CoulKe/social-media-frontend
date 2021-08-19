@@ -10,7 +10,7 @@ import Meta from "../../Components/Meta";
 export default function FollowingsPage({location}) {
   const dispatch = useDispatch();
 
-  const followings = useSelector(state => state.followings)
+  const {followings} = useSelector(state => state.followings)
 
   let pageUser;
 

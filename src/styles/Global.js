@@ -16,15 +16,63 @@ nav a{
   color: ${colors.darkerBlue};
   font-weight: bold;
 }
-main{
-  background: #fff;
-  max-width: 42rem;
-  margin: auto;
-  padding: 0px 16px;
+.username{
+  font-weight: 500;
+  color: #383b3f;
+  &:hover{
+    text-decoration: underline;
+  }
 }
 .resize-none{
   resize: none;
 }
+.offline-error-block{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 99999;
+    color: #fff;
+    background: #000;
+    right: 0px;
+    left: 0px;
+    top: 0px;
+    text-align: center;
+    padding: 14px;
+    p{
+      border: none;
+      font-weight: 800;
+      margin: 0px;
+      padding: 5px 12px;
+      border-radius: 4px;
+    }
+    div{
+      display: flex;
+    width: 50%;
+    justify-content: space-evenly;
+    button{
+      width: fit-content;
+    border: none;
+    font-weight: 700;
+    display: block;
+    }
+    }
+}
+.image-text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: aliceblue;
+    border-radius: 50%;
+    margin: auto;
+  }
+.big-image-text{
+    border: 17px solid ${colors.pink};
+    font-size: 130px;
+    max-width: 250px;
+    height: 250px;
+}
+
 .previous-comments{
   width: 100%;
   background: #fff;
@@ -79,11 +127,4 @@ pre{
 ::-webkit-scrollbar-thumb:hover {
   background: blue;
 }
-
-@media(max-width: 700px){
-  main{
-    margin-bottom: 70px;
-  }
-}
-
 `;

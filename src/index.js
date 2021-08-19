@@ -8,7 +8,7 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import allReducers from "./reducers";
 import { Provider } from "react-redux";
-import { LOG_OUT } from "./ActionTypes/authTypes";
+import * as authTypes from "./ActionTypes/loginTypes";
 
 axios.defaults.baseURL = `${process.env.REACT_APP_API_URL}`;
 axios.defaults.withCredentials = true;
@@ -66,7 +66,7 @@ const enhancer =
     : compose(applyMiddleware(thunk));
 
 const rootReducer = (state, action) => {
-  if (action.type === LOG_OUT) {
+  if (action.type === authTypes.LOGGED_OUT) {
     return allReducers(undefined, action);
   }
 

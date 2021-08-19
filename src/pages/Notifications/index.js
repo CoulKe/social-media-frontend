@@ -5,25 +5,42 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import {
   fetchNotifications,
   readAllNotification,
+  fetchNewNotifications
 } from "../../actions/notificationActions";
 import FormattedNotification from "../../Components/Notifications";
 import Meta from "../../Components/Meta";
+import LoadingBlock from "../../Components/LoadingBlock";
 
 dayjs.extend(relativeTime);
 
 export default function Notifications() {
   const dispatch = useDispatch();
-  const notifications = useSelector((state) => state.notifications);
+  const {notifications, loading} = useSelector((state) => state.notifications);
+  // Take the first one as data is reversed for great usability
+  let lastId = notifications[0]?._id || "";
 
   useEffect(() => {
-    dispatch(fetchNotifications());
-  }, [dispatch]);
+    if(!notifications.length){
+      dispatch(fetchNotifications());
+    }
+  }, [dispatch, notifications]);
+
+  useEffect(() => {
+    const newNotificationTimer = setInterval(() => {
+      dispatch(fetchNewNotifications(lastId));
+    }, 1000);
+
+    return () => {
+      clearInterval(newNotificationTimer);
+    }
+  }, [dispatch, lastId]);
+
   // const markAsRead = function () {
   //   dispatch(readAllNotification());
   // };
 
   return (
-    <main>
+    <section>
     <Meta title="notifications" />
       <h1>Notifications</h1>
       <form
@@ -36,12 +53,13 @@ export default function Notifications() {
         <button type="submit">Mark all as read</button>
       </form>
       <div>
+      {loading ? <LoadingBlock text="Getting notifications..." showSpinner={false}/>:""}
         {notifications
           ? notifications.map((notification, index) => (
               <FormattedNotification key={index} notification={notification} />
             ))
           : "No notifications"}
       </div>
-    </main>
+    </section>
   );
 }

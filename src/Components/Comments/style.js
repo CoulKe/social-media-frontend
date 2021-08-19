@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import colors from "../../styles/variables";
 
-export const WideEditOrDelete = styled.div`
+export const CommentControlsOverlay= styled.div`
   position: fixed;
   top: 0px;
   bottom: 0px;
@@ -11,7 +11,7 @@ export const WideEditOrDelete = styled.div`
   background: #000;
   opacity: 0.1;
 `;
-export const EditOrDeleteNav = styled.nav`
+export const CommentControlsNav = styled.nav`
   padding: 4px;
   width: 150px;
   position: absolute;
@@ -31,6 +31,10 @@ export const EditOrDeleteNav = styled.nav`
 `;
 
 export const SingleComment = styled.div`
+  img {
+    max-width: 50px;
+    height: 50px;
+  }
   form {
     width: fit-content;
 

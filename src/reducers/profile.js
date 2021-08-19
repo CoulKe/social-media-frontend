@@ -1,24 +1,23 @@
 /**Reducers for getting user specific user and his details. */
 import { TOGGLE_FOLLOW } from "../ActionTypes/followTypes";
-import {
-  FETCH_USER_POSTS,
-  UPDATE_USER_INFO,
-} from "../ActionTypes/profileTypes";
+import * as profileTypes from "../ActionTypes/profileTypes";
 
-const profileReducers = (data = { userInfo: {}, posts: {} }, action) => {
+const profileReducers = (
+  state = { userInfo: {}, posts: {}, loading: true, isFollowing: false },
+  action
+) => {
   switch (action.type) {
-    //   case "STORE_POST":
-    //     return [...data, ...action.payload.posts];
-
-    case FETCH_USER_POSTS:
-      return { ...action.payload.data };
-    case UPDATE_USER_INFO:
-      return { ...data, userInfo: action.payload.data };
+    case profileTypes.FETCH_USER_POSTS_REQUEST:
+      return { ...state, loading: true };
+    case profileTypes.FETCH_USER_POSTS_SUCCESS:
+      return { ...action.payload.data, loading: false };
+    case profileTypes.UPDATE_USER_INFO:
+      return { ...state, userInfo: action.payload.data };
     case TOGGLE_FOLLOW:
-      return { ...data, ...action.payload.data };
+      return { ...state, ...action.payload.data };
 
     default:
-      return data;
+      return state;
   }
 };
 

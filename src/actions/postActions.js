@@ -1,33 +1,29 @@
 import axios from "axios";
-import {
-  DELETE_POST_REQUEST,
-  DELETE_POST_SUCCESS,
-  FETCH_ALL_POSTS_FINISHED,
-  FETCH_ALL_POSTS_SUCCESS,
-  FETCH_ALL_POSTS_REQUEST,
-  UPDATE_POST_SUCCESS,
-  STORE_POST_SUCCESS,
-} from "../ActionTypes/postTypes";
+import * as postTypes from "../ActionTypes/postTypes";
 
+/**
+ * Fetches all posts within the set limit.
+ * @param {string} lastId - Id of the last post fetched (`optional`).
+ */
 export const fetchPosts =
   (lastId = "") =>
   async (dispatch) => {
     try {
-      dispatch({ type: FETCH_ALL_POSTS_REQUEST });
+      dispatch({ type: postTypes.FETCH_ALL_POSTS_REQUEST });
 
       let username = localStorage.getItem("loggedUser");
-      const { data } = await axios("/posts", { 
-        params: { 
+      const { data } = await axios("/posts", {
+        params: {
           lastId,
-          username
-        } 
+          username,
+        },
       });
       // check if there are any posts
       if (data.posts.length < 1) {
-        return dispatch({ type: FETCH_ALL_POSTS_FINISHED });
+        return dispatch({ type: postTypes.FETCH_ALL_POSTS_FINISHED });
       } else {
         return dispatch({
-          type: FETCH_ALL_POSTS_SUCCESS,
+          type: postTypes.FETCH_ALL_POSTS_SUCCESS,
           payload: {
             data: data.posts,
           },
@@ -37,6 +33,38 @@ export const fetchPosts =
       console.log(error);
     }
   };
+
+/**
+ * Fetches a single post.
+ * @param {string} postId - Id of the post to fetch.
+ */
+export const fetchSinglePost =
+  (postId = "") =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: postTypes.FETCH_SINGLE_POST_REQUEST });
+
+      const { data } = await axios("/posts/single", {
+        params: {
+          postId: postId,
+        },
+      });
+
+      dispatch({
+        type: postTypes.FETCH_SINGLE_POST_SUCCESS,
+        payload: {
+          data: data,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+/**
+ * Saves a new post to the database.
+ * @param {string} post - New post to be created.
+ */
 export const storePost =
   (post = "") =>
   async (dispatch) => {
@@ -44,6 +72,10 @@ export const storePost =
       return;
     }
     try {
+      dispatch({
+        type: postTypes.STORE_POST_REQUEST,
+      });
+
       const { data } = await axios("/posts", {
         method: "POST",
         data: {
@@ -52,7 +84,7 @@ export const storePost =
       });
 
       dispatch({
-        type: STORE_POST_SUCCESS,
+        type: postTypes.STORE_POST_SUCCESS,
         payload: {
           data,
         },
@@ -62,6 +94,12 @@ export const storePost =
       console.log(error.response);
     }
   };
+
+/**
+ * Updates the specified post.
+ * @param {string} postId - Id of the post to be edited.
+ * @param {string} post - Post text to be updated.
+ */
 export const editPost =
   (postId = "", post = "") =>
   async (dispatch) => {
@@ -75,7 +113,7 @@ export const editPost =
       });
 
       dispatch({
-        type: UPDATE_POST_SUCCESS,
+        type: postTypes.UPDATE_POST_SUCCESS,
         payload: {
           data,
         },
@@ -85,9 +123,43 @@ export const editPost =
     }
   };
 
+/**
+ * Unpins/Pins a single post to be highlighted as the main/first post on the user profile.
+ * @param {string} postId - Id of the post to be pinned.
+ */
+export const togglePinPost = (postId) => async (dispatch) => {
+  try {
+    dispatch({ type: postTypes.PIN_POST_REQUEST });
+
+    const { data } = await axios("/posts/pin", {
+      method: "PATCH",
+      data: {
+        postId,
+      },
+    });
+
+    console.log(data);
+    dispatch({ type: postTypes.PIN_POST_SUCCESS, payload: {data} });
+  } catch (err) {
+    console.log(err);
+  }
+};
+/**Resets the pinning state. */
+export const pinningPostReset = () => async (dispatch) => {
+  try {
+    dispatch({ type: postTypes.PINNING_POST_RESET });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
+ * Deletes a single post.
+ * @param {string} postId - Id of the post to be deleted.
+ */
 export const deletePost = (postId) => async (dispatch) => {
   dispatch({
-    type: DELETE_POST_REQUEST,
+    type: postTypes.DELETE_POST_REQUEST,
   });
   try {
     await axios("/posts/delete", {
@@ -98,7 +170,7 @@ export const deletePost = (postId) => async (dispatch) => {
     });
     console.log(postId);
     dispatch({
-      type: DELETE_POST_SUCCESS,
+      type: postTypes.DELETE_POST_SUCCESS,
       payload: {
         data: postId,
       },

@@ -1,18 +1,21 @@
 import axios from "axios";
-import { FETCH_CHATS } from "../ActionTypes/chatTypes";
+import * as chatTypes from "../ActionTypes/chatTypes";
 
 /**Fetches all messages thread overview for a single user.*/
 export const fetchChats = () => async (dispatch) => {
-    try {
-      const { data } = await axios("/chats");
-  
-      dispatch({
-        type: FETCH_CHATS,
-        payload: {
-          data,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  try {
+    dispatch({
+      type: chatTypes.FETCH_CHATS_REQUEST,
+    });
+    const { data } = await axios("/chats");
+
+    dispatch({
+      type: chatTypes.FETCH_CHATS_SUCCESS,
+      payload: {
+        data,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

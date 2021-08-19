@@ -1,11 +1,11 @@
 import { GET_FOLLOWERS } from "../ActionTypes/followTypes";
 
-const followersReducer = (followers = [], action) => {
+const followersReducer = (state = {followers: [], loading: true}, action) => {
   switch (action.type) {
     case GET_FOLLOWERS:
-      return [...action.payload.data];
+      return {...state, followers: [...action.payload.data]};
     default:
-      return followers;
+      return state;
   }
 };
 

@@ -1,24 +1,33 @@
-import {
-  FETCH_NOTIFICATIONS,
-  READ_ALL_NOTIFICATIONS,
-  READ_ONE_NOTIFICATION,
-} from "../ActionTypes/notificationTypes";
+import * as notificationTypes from "../ActionTypes/notificationTypes";
 
-const notificationsReducer = (state = [], action) => {
+const notificationsReducer = (
+  state = { notifications: [], loading: true },
+  action
+) => {
   switch (action.type) {
-    case FETCH_NOTIFICATIONS:
-      return [...action.payload.data];
-    case READ_ONE_NOTIFICATION:
-      return state.map((state) =>
-        state._id === action.payload.data ? { ...state, viewed: true } : state
-      );
+    case notificationTypes.FETCH_NOTIFICATIONS_REQUEST:
+      return { ...state, loading: true};
+    case notificationTypes.FETCH_NOTIFICATIONS_SUCCESS:
+      return { ...state, notifications: action.payload.data.reverse(), loading: false };
+    case notificationTypes.FETCH_NEW_NOTIFICATIONS_SUCCESS:
+      return { ...state, notifications: [...action.payload.data.reverse(), ...state.notifications], loading: false };
+    case notificationTypes.READ_ONE_NOTIFICATION:
+      return {
+        ...state,
+        notifications: state.notifications.map((state) =>
+          state._id === action.payload.data ? { ...state, viewed: true } : state
+        ),
+      };
 
-    case READ_ALL_NOTIFICATIONS:
-      return state.map((state) =>
-        state.viewed ? state : { ...state, viewed: true }
-      );
+    case notificationTypes.READ_ALL_NOTIFICATIONS:
+      return {
+        ...state,
+        notifications: state.notifications.map((state) =>
+          state.viewed ? state : { ...state, viewed: true }
+        ),
+      };
     default:
-      return [...state];
+      return state;
   }
 };
 

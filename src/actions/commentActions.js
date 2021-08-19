@@ -1,15 +1,15 @@
 import axios from "axios";
-import {
-  FETCH_COMMENTS,
-  POST_COMMENT,
-  EDIT_COMMENT,
-  DELETE_COMMENT,
-  MORE_COMMENTS,
-} from "../ActionTypes/commentTypes";
+import * as commentTypes from "../ActionTypes/commentTypes";
 import { UPDATE_POST_SUCCESS } from "../ActionTypes/postTypes";
 
+/**
+ * Gets all comments within a set limit.
+ * @param {string} postId - id of the post that was commented.
+ * @param {string} lastCommentId -  id of the last comment fetched (`optional`).
+ * @param {string} highlightId - id of the comment to be highlighted (`optional`). E.g from notifications.
+ */
 export const getComments =
-  (postId, lastCommentId = "", highlightId="") =>
+  (postId, lastCommentId = "", highlightId = "") =>
   async (dispatch) => {
     const { data } = await axios({
       url: "/comments",
@@ -17,7 +17,7 @@ export const getComments =
       params: {
         postId,
         lastCommentId,
-        highlightId
+        highlightId,
       },
     });
 
@@ -27,22 +27,57 @@ export const getComments =
         data: data.post,
       },
     });
+    console.log(data.comments);
+    
     if (lastCommentId) {
       dispatch({
-        type: MORE_COMMENTS,
+        type: commentTypes.MORE_COMMENTS,
         payload: {
           data: data.comments,
         },
       });
     } else {
       dispatch({
-        type: FETCH_COMMENTS,
+        type: commentTypes.FETCH_COMMENTS,
         payload: {
           data: data.comments,
         },
       });
     }
   };
+
+/**
+ * Gets a single comment.
+ * @param {string} commentId - Id of the comment.
+ * @param {string} postId - Id of the post.
+ */
+export const getSingleComment = (commentId, postId) => async (dispatch) => {
+  try {
+    dispatch({ type: commentTypes.FETCH_SINGLE_COMMENT_REQUEST });
+    const { data } = await axios({
+      url: "/comments/single",
+      params: {
+        commentId,
+        postId,
+      },
+    });
+
+    dispatch({
+      type: commentTypes.FETCH_SINGLE_COMMENT_SUCCESS,
+      payload: {
+        data,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
+ * Creates a new comment and sends to the server.
+ * @param {string} postId - Id of the post.
+ * @param {string} newComment - Comment to be posted.
+ */
 export const postComment = (postId, newComment) => async (dispatch) => {
   const { data } = await axios({
     url: "/comments",
@@ -53,31 +88,54 @@ export const postComment = (postId, newComment) => async (dispatch) => {
     },
   });
   dispatch({
-    type: POST_COMMENT,
+    type: commentTypes.POST_COMMENT,
     payload: {
       data,
     },
   });
 };
 
+/**
+ * Resets the sending property of the comment state.
+ */
+export const notSending = () => async (dispatch) => {
+  dispatch({ type: commentTypes.NOT_SENDING });
+};
+
+/**
+ * Updates a new comment.
+ * @param {string} commentId - Id of the comment.
+ * @param {string} editedComment - Comment text to be updated.
+ */
 export const editComment = (commentId, editedComment) => async (dispatch) => {
-  const { data } = await axios({
-    url: "/comments",
-    method: "PATCH",
-    data: {
-      commentId,
-      comment: editedComment,
-    },
-  });
+  try {
+    dispatch({ type: commentTypes.EDIT_COMMENT_REQUEST });
+    const { data } = await axios({
+      url: "/comments",
+      method: "PATCH",
+      data: {
+        commentId,
+        comment: editedComment,
+      },
+    });
 
-  dispatch({
-    type: EDIT_COMMENT,
-    payload: {
-      data,
-    },
-  });
+    dispatch({
+      type: commentTypes.EDIT_COMMENT_SUCCESS,
+      payload: {
+        data,
+      },
+    });
+  } catch (err) {
+    console.log(err.response);
+  }
 };
-export const likeComment = (commentId, postId) => async (dispatch) => {
+
+/**
+ * Likes/Unlikes a comment.
+ * @param {string} commentId - Id of the comment.
+ * @param {string} postId - Id of the post commented.
+ */
+export const toggleLikeComment = (commentId, postId) => async (dispatch) => {
   const { data } = await axios({
     url: "/comment-likes",
     method: "POST",
@@ -88,13 +146,17 @@ export const likeComment = (commentId, postId) => async (dispatch) => {
   });
 
   dispatch({
-    type: EDIT_COMMENT,
+    type: commentTypes.EDIT_COMMENT_SUCCESS,
     payload: {
       data,
     },
   });
 };
 
+/**
+ * Deletes a single comment.
+ * @param {string} commentId - Id of the comment to be deleted.
+ */
 export const deleteComment = (commentId) => async (dispatch) => {
   try {
     await axios({
@@ -106,7 +168,7 @@ export const deleteComment = (commentId) => async (dispatch) => {
     });
 
     dispatch({
-      type: DELETE_COMMENT,
+      type: commentTypes.DELETE_COMMENT,
       payload: {
         data: commentId,
       },

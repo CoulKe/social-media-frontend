@@ -6,10 +6,11 @@ import LoadMoreButton from "../../Components/Posts/LoadMore";
 import PostBox from "../../Components/Posts/PostBox";
 import { fetchPosts } from "../../actions/postActions";
 import Meta from "../../Components/Meta";
+import Skeleton from "react-loading-skeleton";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const {posts, loading, finished} = useSelector((state) => state.posts);
+  const {posts, loading, finished, sending, sendingSuccess} = useSelector((state) => state.posts);
 
   useEffect(() => {
     if (!posts.length) {
@@ -26,20 +27,21 @@ const Home = () => {
   }
 
   return (
-      <main>
-        <PostBox />
+      <section>
+        <PostBox sending={sending} sendingSuccess={sendingSuccess} />
         <Meta title="Home" />
-        {!loading ? <PostComponent posts={posts} key={posts.length}/> : <div className="text-center">
+        {!loading ? <PostComponent posts={posts} key={posts.length}/> : <Skeleton height={100} count={10}/>}
+        {/* {!loading ? <PostComponent posts={posts} key={posts.length}/> : <div className="text-center">
         <Spinner animation="border"></Spinner> <br />
         <p>Getting posts</p>
-        </div>}
+        </div>} */}
 
         {posts.length && !loading && !finished ? (
           <LoadMoreButton cb={loadMore}/>
         )
          : ""}
          {finished && !loading ? <h1 className="text-center">No more posts to fetch</h1> : ""}
-      </main>
+      </section>
   );
 };
 

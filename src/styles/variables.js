@@ -1,5 +1,6 @@
 const colors = {
   light: "#F8F8F8",
+  midYellow: "#ffff59",
   pink: "#C2185B",
   pinkNotification: "#ffeaff",
   maroon: "#6f002c",

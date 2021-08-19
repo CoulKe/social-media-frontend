@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.main`
+export const Wrapper = styled.section`
   min-height: 80vh;
 
   .search-options {
@@ -13,5 +13,10 @@ export const Wrapper = styled.main`
       border-bottom: 2px solid #c2185b;
       width: 50%;
     }
+  }
+  .users-result{
+    box-shadow: 0px 0px 20px 0px #d7d7d7;
+    padding: 8px;
+    border-radius: 8px;
   }
 `;

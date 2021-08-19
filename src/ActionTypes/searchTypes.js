@@ -1,1 +1,2 @@
-export const SEARCH = "SEARCH";
+export const SEARCH_REQUEST = "SEARCH_REQUEST";
+export const SEARCH_SUCCESSFULL = "SEARCH_SUCCESSFULL";

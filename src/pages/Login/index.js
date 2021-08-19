@@ -31,7 +31,7 @@ export default function Login() {
         setErrors({});
         //clear form if successfull
         form.reset();
-        return window.location.pathname = "/";
+        return window.location.replace("/");
       })
       .catch((error) => {
         const { response } = error;
@@ -48,7 +48,7 @@ export default function Login() {
   };
   return (
     <LoginWrapper>
-    <Meta title="Login" />
+      <Meta title="Login" />
       <Form
         onSubmit={handleSubmit}
         onChange={handleChange}

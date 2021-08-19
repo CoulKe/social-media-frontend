@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import colors from "../../styles/variables";
 
-export const Wrapper = styled.main`
+export const Wrapper = styled.section`
   position: relative;
   min-height: 80vh;
 `;

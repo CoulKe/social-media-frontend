@@ -1,6 +1,10 @@
 import axios from "axios";
 import { TOGGLE_LIKE_SUCCESS } from "../ActionTypes/likeTypes";
 
+/**
+ * Likes/Unlikes a post.
+ * @param {string} postId - Id of the post to toggle like.
+ */
 export const togglePostLike =
   (postId = "") =>
   async (dispatch) => {
@@ -12,7 +16,6 @@ export const togglePostLike =
         },
       });
 
-      console.log(data);
       dispatch({
         type: TOGGLE_LIKE_SUCCESS,
         payload: {

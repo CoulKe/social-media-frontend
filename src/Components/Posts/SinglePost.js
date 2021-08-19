@@ -1,14 +1,14 @@
 import React, { useState, Suspense } from "react";
-// import EditOrDeletePost from "./EditOrDeletePost";
 import PostButtons from "./PostButtons";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Linkify } from "../../utils";
-const EditOrDeletePost = React.lazy(() => import('./EditOrDeletePost'));
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
+
+const PostControls = React.lazy(() => import('./PostControls'));
 
 export default function SinglePost({ post }) {
+  const history = useHistory()
   const [showEditButtons, setShowEditButtons] = useState(false);
-  const authenticatedUser = localStorage.getItem("loggedUser");
-
   const onCancel = (value)=>{
     setShowEditButtons(value)
   }
@@ -18,9 +18,9 @@ export default function SinglePost({ post }) {
         <Link
           to={`/profile?username=${post.user.username}`}
           className="font-weight-bold text-decoration-none pb-2 pt-2"
-        >{`${post.user.first_name} ${post.user.last_name}`}</Link>
+        >{`${post.user.first_name} ${post.user.last_name}`} <span className="username">@{post.user.username}</span></Link>
 
-        {!showEditButtons && (authenticatedUser === post.user.username) && (
+        {!showEditButtons && (
           <div
             className="pr-4 pb-2 pt-2 d-inline"
             style={{cursor: "pointer"}}
@@ -35,15 +35,31 @@ export default function SinglePost({ post }) {
             </svg>
           </div>
         )}
-        {showEditButtons && (authenticatedUser === post.user.username) && (
-          <Suspense fallback={<div>Loading...</div>}>
-            <EditOrDeletePost post={post} key={`${post.user.username}-${post._id}`} onCancel={onCancel}/>
+        {showEditButtons && (
+          <Suspense fallback={<Spinner animation="border" style={{width: "20px", height:"20px",borderBottom: "4px solid #282828"}}/>}>
+            <PostControls post={post} key={`${post.user.username}-${post._id}`} onCancel={onCancel}/>
           </Suspense>
         )}
       </div>
-      {/* <pre>{Linkify(post.post)}</pre> */}
-      <pre><Linkify text={post.post} key={`linkify-${post._id}`}/></pre>
+      <pre onClick={(e) => {
+        let redirectPostUrl = `/comments?postId=${post._id}`;
+        if(window.location.href !== `${window.location.origin}${redirectPostUrl}` && !e.target?.href){
+          let selection = window.getSelection();
+
+          switch(selection){
+            case null:
+            case selection.type = "None":
+              return history.push(redirectPostUrl);
+            default:
+              return history.push(redirectPostUrl);
+          }
+        }
+
+        }}>
+      <Linkify text={post.post} key={`linkify-${post._id}`}/>
+      </pre>
       <PostButtons post={post} key={`${post.user.first_name}-${post._id}`} />
     </div>
   );
 }
+

@@ -21,7 +21,7 @@ export default function EditProfile() {
     }
 
   return (
-    <main className="bg-white">
+    <section className="bg-white">
       <Form method="POST" onChange={handleFormChange} onSubmit={submitDetails}>
         <h1 style={{ fontSize: '24px' }} className="font-smaller">Personal details</h1>
         <div id="invalid"></div>
@@ -42,6 +42,6 @@ export default function EditProfile() {
           </Button>
         </div>
       </Form>
-    </main>
+    </section>
   );
 }

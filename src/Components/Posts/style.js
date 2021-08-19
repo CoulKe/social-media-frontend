@@ -63,7 +63,7 @@ export const LoadMore = styled.div`
   }
 `;
 
-export const WideEditOrDelete = styled.div`
+export const PostControlsOverlay = styled.div`
   position: fixed;
   top: 0px;
   bottom: 0px;
@@ -73,7 +73,7 @@ export const WideEditOrDelete = styled.div`
   background: #000;
   opacity: 0.1;
 `;
-export const EditOrDeleteNav = styled.nav`
+export const PostControlsNav = styled.nav`
   padding: 4px;
   width: 150px;
   position: absolute;
@@ -88,6 +88,16 @@ export const EditOrDeleteNav = styled.nav`
     display: inline-block;
     text-align: left;
     width: 100%;
+  }
+  a,
+  form,
+  button,
+  div {
     border: none;
   }
+`;
+export const HiddenInput = styled.input`
+  position: absolute;
+  right: 900px;
+  opacity: 0;
 `;

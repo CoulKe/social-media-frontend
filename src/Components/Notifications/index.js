@@ -33,8 +33,8 @@ export default function FormattedNotification({ notification }) {
 
   // format notification
   const separatedDescription = function (notification) {
-    let descriptionFirstPart = notification.description.split('"', 1)[0];
-    let descriptionSecondPart = notification.description.substring(
+    let descriptionFirstPart = notification?.description?.split('"', 1)[0];
+    let descriptionSecondPart = notification?.description?.substring(
       descriptionFirstPart.length
     );
     console.log({ descriptionFirstPart });

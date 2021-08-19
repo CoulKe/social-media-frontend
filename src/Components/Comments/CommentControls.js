@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { EditOrDeleteNav, WideEditOrDelete } from "./style";
+import { CommentControlsNav, CommentControlsOverlay } from "./style";
 import { Link } from "react-router-dom";
 import { Button, Form, Modal } from "react-bootstrap";
 import { deleteComment } from "../../actions/commentActions";
 
-export default function EditOrDeletePost({ onCancel, comment }) {
+export default function CommentControls({ onCancel, comment, postId }) {
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
@@ -20,14 +20,14 @@ export default function EditOrDeletePost({ onCancel, comment }) {
 
   return (
     <div>
-      <WideEditOrDelete
+      <CommentControlsOverlay
         onClick={(e) => {
           e.stopPropagation();
           onCancel(false);
         }}
-      ></WideEditOrDelete>
+      ></CommentControlsOverlay>
       <div className="position-relative">
-        <EditOrDeleteNav className="border d-flex flex-column shadow-lg bg-white">
+        <CommentControlsNav className="border d-flex flex-column shadow-lg bg-white">
           <Modal
             show={show}
             onClick={() => onCancel(false)}
@@ -50,7 +50,7 @@ export default function EditOrDeletePost({ onCancel, comment }) {
             </Modal.Footer>
           </Modal>
           <Link
-            to={`/edit-comment?commentId=${comment._id}`}
+            to={`/edit-comment?commentId=${comment._id}&postId=${postId}`}
             className="border-bottom bg-white"
           >
             Edit
@@ -66,7 +66,7 @@ export default function EditOrDeletePost({ onCancel, comment }) {
           >
             Delete
           </button>
-        </EditOrDeleteNav>
+        </CommentControlsNav>
       </div>
     </div>
   );

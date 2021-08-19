@@ -1,12 +1,14 @@
-import { FETCH_CHATS } from "../ActionTypes/chatTypes";
+import * as chatTypes from "../ActionTypes/chatTypes";
 
-const chatsReducer = (state = [], action) => {
+const chatsReducer = (state = { chats: [], loading: true }, action) => {
   switch (action.type) {
-    case FETCH_CHATS:
-      return [...state, ...action.payload.data];
+    case chatTypes.FETCH_CHATS_REQUEST:
+      return { ...state, loading: true };
+    case chatTypes.FETCH_CHATS_SUCCESS:
+      return { chats: action.payload.data, loading: false };
 
     default:
-      return [...state];
+      return state;
   }
 };
 

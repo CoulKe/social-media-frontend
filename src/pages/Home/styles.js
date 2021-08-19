@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import colors from "../../styles/variables";
 
-const Wrapper = styled.main`
+const Wrapper = styled.section`
   display: block;
 `;
 

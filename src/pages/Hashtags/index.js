@@ -25,7 +25,7 @@ export default function Index() {
   };
 
   return (
-    <main>
+    <section>
       <Meta title="Hashtags" />
       <h1>Hashtags</h1>
       {posts.map((hashtag, index) => (
@@ -33,6 +33,6 @@ export default function Index() {
       ))}
       {!loading && !finished ? <LoadMoreButton cb={loadMore} /> : ""}
       {finished ? <p>No more hashtags to fetch</p> : ""}
-    </main>
+    </section>
   );
 }
