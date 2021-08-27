@@ -1,20 +1,30 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
+=======
+import React, { useState } from "react";
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
 import { Form, Button } from "react-bootstrap";
 import { LoginWrapper } from "./style";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Meta from "../../Components/Meta";
+<<<<<<< HEAD
 import { logout } from "../../actions/login";
 import { useDispatch } from "react-redux";
+=======
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
 
 export default function Login() {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
+<<<<<<< HEAD
   const dispatch = useDispatch();
   
   useEffect(() => {
     dispatch(logout());
   }, [dispatch]);
+=======
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -9,6 +9,12 @@ export default function PostButtons({post}) {
     const history = useHistory();
     const dispatch = useDispatch();
 
+<<<<<<< HEAD
+=======
+  const likePost = function (postId) {
+    dispatch(togglePostLike(postId));
+  };
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
   return (
     <PostsButtons hasLiked={post.hasLiked}>
       {/* make event to be on click to not only make the button submit but also the form itself if clicked */}
@@ -16,7 +22,11 @@ export default function PostButtons({post}) {
         method="POST"
         onClick={(e) => {
           e.preventDefault();
+<<<<<<< HEAD
           dispatch(togglePostLike(post._id));
+=======
+          likePost(post._id);
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
         }}
       >
         <button type="submit" className="border-0 mx-auto like-button">

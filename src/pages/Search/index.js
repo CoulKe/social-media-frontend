@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
+=======
+import queryString from "query-string";
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Form } from "react-bootstrap";
@@ -11,7 +15,11 @@ import SinglePost from "../../Components/Posts/SinglePost";
 export default function Search() {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
+<<<<<<< HEAD
   const { users, posts, loading } = useSelector(
+=======
+  const { users, posts, loading, finished } = useSelector(
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
     (state) => state.search
   );
 

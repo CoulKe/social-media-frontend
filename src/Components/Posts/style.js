@@ -50,7 +50,10 @@ export const LoadMore = styled.div`
   border: none;
   text-align: center;
   background: transparent;
+<<<<<<< HEAD
   margin-bottom: 52px;
+=======
+>>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
   .post-button {
     font-size: 18px;
   }
