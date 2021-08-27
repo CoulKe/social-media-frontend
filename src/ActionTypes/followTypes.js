@@ -1,0 +1,3 @@
+export const GET_FOLLOWERS = "GET_FOLLOWERS";
+export const GET_FOLLOWINGS = "GET_FOLLOWINGS";
+export const TOGGLE_FOLLOW = "TOGGLE_FOLLOW";
