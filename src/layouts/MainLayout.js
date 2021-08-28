@@ -18,7 +18,7 @@ export default function MainLayout({ children }) {
     <Wrapper>
       {loginOut && <Logout>
       <Spinner animation="grow"></Spinner>
-      <p>Logging out...</p>
+      <p>Just a second...</p>
       </Logout>}
     <MobileMenu className="fixed-bottom bg-light border w-100">
       <div>
