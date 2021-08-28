@@ -33,6 +33,6 @@ export const checkNewChat = () => async (dispatch) => {
     });
 
   } catch (error) {
-    console.log(error);
+    return null;
   }
 };

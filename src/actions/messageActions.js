@@ -15,7 +15,6 @@ export const fetchMessages = (authenticatedUser) => async (dispatch) => {
         authenticatedUser,
       },
     });
-    console.log(data)
     dispatch({
       type: messageTypes.FETCH_MESSAGES_SUCCESS,
       payload: {

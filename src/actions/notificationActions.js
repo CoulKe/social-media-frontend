@@ -59,7 +59,7 @@ export const fetchNewNotifications =
         },
       });
     } catch (err) {
-      console.log(err);
+      return null;
     }
   };
 
