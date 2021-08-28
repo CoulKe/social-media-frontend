@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
@@ -9,55 +8,6 @@ import thunk from "redux-thunk";
 import allReducers from "./reducers";
 import { Provider } from "react-redux";
 import * as authTypes from "./ActionTypes/loginTypes";
-
-axios.defaults.baseURL = `${process.env.REACT_APP_API_URL}`;
-axios.defaults.withCredentials = true;
-let accessToken;
-
-// Response interceptor for API calls
-axios.interceptors.response.use(
-  (response) => {
-    if (
-      (response.config.url === "/refresh-tokens" ||
-        response.config.url === "/login") &&
-      response.data.hasOwnProperty("accessToken")
-    ) {
-      // Set access tokens in memory
-      accessToken = response.data.accessToken;
-    }
-    return response;
-  },
-  async function (error) {
-    const originalRequest = error.config;
-
-    // Retry the request once.
-    if (error?.response?.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const { data } = await axios({
-          url: "/refresh-tokens",
-          method: "POST",
-        });
-        accessToken = data.accessToken;
-      } catch (err) {
-        localStorage.clear();
-        return (window.location.pathname = "/login");
-      }
-
-      const apiToken = accessToken || "";
-      axios.defaults.headers.Authorization = "Bearer " + apiToken;
-      return axios(originalRequest);
-    }
-    return Promise.reject(error);
-  }
-);
-axios.interceptors.request.use(async (req) => {
-  const apiToken = accessToken;
-  req.headers.Authorization = apiToken ? `Bearer: ${apiToken}` : "";
-
-  return req;
-});
 
 // Check if it's development and enable redux dev tools if it is installed.
 const enhancer =
