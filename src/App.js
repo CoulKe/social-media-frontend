@@ -152,7 +152,7 @@ axios.interceptors.request.use(async (req) => {
   // Periodically check if there's a new chat.
   useEffect(() => {
     let messageTimer = setInterval(() => {
-      if (isLogged && accessToken && !hasNewChat && window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/messages') {
+      if (isLogged && accessToken.current && !hasNewChat && window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/messages') {
         dispatch(checkNewChat());
       }
     }, 1000);
@@ -165,7 +165,7 @@ axios.interceptors.request.use(async (req) => {
   // Periodically check if there's a new notification.
   useEffect(() => {
     let  notificationTimer = setInterval(() => {
-      if (isLogged && accessToken && !hasNewNotification && window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/notifications') {
+      if (isLogged && accessToken.current && !hasNewNotification && window.location.pathname !== '/login' && window.location.pathname !== '/register' && window.location.pathname !== '/notifications') {
         dispatch(checkNewNotification());
       }
     }, 1000);
