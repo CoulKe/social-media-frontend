@@ -14,12 +14,6 @@ export const CommentsBlock = styled.div`
     border-left: 2px solid black;
     border-radius: 22px;
   }
-  /* &::after {
-    content: " ";
-    width: 100%;
-    height: 70px;
-    display: block;
-  } */
 
   .comment-box {
     position: fixed;

@@ -23,13 +23,7 @@ export default function Chats({ location }) {
   const { view } = queryString.parse(location.search);
 
   useEffect(() => {
-<<<<<<< HEAD
       dispatch(fetchChats());
-=======
-    if (!chats.length) {
-      dispatch(fetchChats());
-    }
->>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
   }, [chats.length, dispatch]);
 
   // Reset search data on unmount
@@ -105,11 +99,7 @@ export default function Chats({ location }) {
                   <b>{message.user.first_name} {message.user.last_name}</b>
                 </p>
                 <MessageWrapper>
-<<<<<<< HEAD
                 {loggedUser === message.user.username ? <p><b className="text-danger">You:</b> {message.chat_snippet}</p> : <p>{message.chat_snippet}</p>}
-=======
-                  {message.chat_snippet}
->>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
                   <span>{dayjs().to(dayjs(message.date_updated))}</span>
                 </MessageWrapper>
               </Link>

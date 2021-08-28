@@ -13,10 +13,6 @@ import Meta from "../../Components/Meta";
 import { Linkify } from "../../utils";
 import { Link, useHistory } from "react-router-dom";
 import LoadingBlock from "../../Components/LoadingBlock";
-<<<<<<< HEAD
-=======
-import axios from "axios";
->>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
 // import Read from "../../assets/images/read.png";
 // import Unread from "../../assets/images/unread.png";
 

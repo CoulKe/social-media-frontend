@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import colors from "../../styles/variables";
 
-// const gradient = "linear-gradient()";
-
 const AuthWrapper = styled.div`
   width: 100vw;
   max-width: 100vw;

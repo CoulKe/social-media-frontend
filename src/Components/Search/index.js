@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import queryString from "query-string";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Form } from "react-bootstrap";

@@ -28,11 +28,7 @@ export default function PostControls({ onCancel, post }) {
   const handleShow = () => {setShow(true); };
   const handleDelete = (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     e.stopPropagation();  
-=======
-    e.stopPropagation();
->>>>>>> fc7e827a2753cddf3744fde5cb17aec225f50347
     dispatch(deletePost(post._id))
     setShow(false);
   };
