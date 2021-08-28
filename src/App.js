@@ -132,7 +132,7 @@ axios.interceptors.request.use(async (req) => {
       return (window.location.pathname = "/login");
     }
   }
-  if(isLogged && !accessToken.current){
+  if(isLogged && !accessToken.current && window.location.pathname !== "/register" && window.location.pathname !== "/login"){
     fetchToken();
   }
   }, [isLogged]);
