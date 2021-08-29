@@ -88,7 +88,7 @@ export default function PostControls({ onCancel, post }) {
       </Form>
       </div>
       )}
-      <Form onSubmit={(e) => {
+      <Form onSubmit={async(e) => {
         e.preventDefault();
         e.stopPropagation();
         copyLink.current.select();
@@ -96,8 +96,9 @@ export default function PostControls({ onCancel, post }) {
          document.execCommand('copy');
          return onCancel(false);
         }
-        else if(navigator.clipboard){
-          console.log('Passed here');
+        else if(navigator.clipboard && typeof document.execCommand !== "function"){
+          await navigator.clipboard.writeText(`${window.location.host}/comments?postId=${post._id}`)
+          .then(()=>onCancel(false))
         }
       }}>
       {/* Don't put hidden attribute to allow copying */}
