@@ -68,10 +68,11 @@ axios.interceptors.response.use(
     if (
       (response.config.url === "/refresh-tokens" ||
         response.config.url === "/login") &&
-      response.data.hasOwnProperty("accessToken")
+      response.data.hasOwnProperty("accessToken") && response.data.hasOwnProperty("refreshToken")
     ) {
       // Set access tokens in memory
       accessToken.current = response.data.accessToken;
+      localStorage.setItem("refreshToken", response.data.refreshToken);
     }
     return response;
   },
@@ -88,6 +89,7 @@ axios.interceptors.response.use(
           method: "POST",
         });
         accessToken.current = data.accessToken;
+        localStorage.setItem("refreshToken", data.refreshToken);
       } catch (err) {
         localStorage.clear();
         return (window.location.pathname = "/login");
@@ -102,7 +104,11 @@ axios.interceptors.response.use(
 );
 axios.interceptors.request.use(async (req) => {
   const apiToken = accessToken.current;
+  const refreshToken = localStorage.getItem('refreshToken');
   req.headers.Authorization = apiToken ? `Bearer: ${apiToken}` : "";
+  req.headers.x_refresh = refreshToken ? `${refreshToken}` : "";
+  req.headers.x_auth_username = localStorage.getItem('loggedUser') ? localStorage.getItem('loggedUser') : '';
+  req.headers.x_auth_Id = localStorage.getItem('id') ? localStorage.getItem('id') : "";
 
   return req;
 });
